@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id         String    @id @default(cuid())
+  title      String
+  memo       String?
+  yarnType   String?   @map("yarn_type")
+  needleSize String?   @map("needle_size")
+  gauge      String?
+  patternUrl String?   @map("pattern_url")
+  imageUrl   String?   @map("image_url")
+  progress   Int       @default(0)
+  difficulty Int       @default(1)
+  tags       String[]
+  status     String    @default("todo")
+  position   Int       @default(0)
+  startDate  DateTime? @map("start_date")
+  endDate    DateTime? @map("end_date")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
