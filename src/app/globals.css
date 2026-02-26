@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5;
+  --background: #e8d5b7;
   --foreground: #2d2926;
 }
 
@@ -25,10 +25,95 @@
   --color-sage-main: #7a9e7a;
   --color-sky-light: #e8eef8;
   --color-sky-main: #7a8eb4;
+  --color-postit-yellow: #fff9c4;
+  --color-postit-pink: #fce4ec;
+  --color-postit-green: #e8f5e9;
+  --color-postit-blue: #e3f2fd;
+  --color-desk: #c9a96e;
+  --color-desk-dark: #a07d50;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
+}
+
+/* 책상 나무결 텍스처 배경 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(0,0,0,0.02) 80px,
+      rgba(0,0,0,0.02) 81px
+    ),
+    repeating-linear-gradient(
+      85deg,
+      transparent,
+      transparent 120px,
+      rgba(0,0,0,0.015) 120px,
+      rgba(0,0,0,0.015) 121px
+    ),
+    linear-gradient(
+      180deg,
+      #d4b88a 0%,
+      #c9a96e 30%,
+      #d4b88a 60%,
+      #c4a06a 100%
+    );
+}
+
+/* 포스트잇 테이프 장식 */
+.tape {
+  position: relative;
+}
+.tape::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 50px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  z-index: 1;
+}
+
+
+/* 마스킹 테이프 느낌 */
+.masking-tape {
+  position: relative;
+  display: inline-block;
+}
+.masking-tape::before {
+  content: "";
+  position: absolute;
+  inset: -4px -12px;
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(-0.5deg);
+  z-index: -1;
+  border-radius: 2px;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-warm-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-warm-400);
 }

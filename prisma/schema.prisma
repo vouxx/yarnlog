@@ -8,23 +8,41 @@ datasource db {
 }
 
 model Project {
-  id         String    @id @default(cuid())
-  title      String
-  memo       String?
-  yarnType   String?   @map("yarn_type")
-  needleSize String?   @map("needle_size")
-  gauge      String?
-  patternUrl String?   @map("pattern_url")
-  imageUrl   String?   @map("image_url")
-  progress   Int       @default(0)
-  difficulty Int       @default(1)
-  tags       String[]
-  status     String    @default("todo")
-  position   Int       @default(0)
-  startDate  DateTime? @map("start_date")
-  endDate    DateTime? @map("end_date")
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @updatedAt @map("updated_at")
+  id          String    @id @default(cuid())
+  title       String
+  memo        String?
+  gauge       String?
+  yarns       Json      @default("[]")
+  needles     Json      @default("[]")
+  supplies    Json      @default("[]")
+  attachments Json      @default("[]")
+  progress    Int       @default(0)
+  difficulty  Int       @default(1)
+  tags        String[]
+  folder      String?
+  counters    Json      @default("[]")
+  status      String    @default("todo")
+  position    Int       @default(0)
+  startDate   DateTime? @map("start_date")
+  endDate     DateTime? @map("end_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   @@map("projects")
+}
+
+model Material {
+  id        String   @id @default(cuid())
+  type      String   // "yarn" | "supply" | "needle"
+  name      String
+  brand     String?
+  color     String?
+  weight    String?
+  quantity  String?
+  notes     String?
+  imageUrl  String?  @map("image_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("materials")
 }

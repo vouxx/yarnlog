@@ -9,22 +9,7 @@ export async function PATCH(
   const body = await request.json();
 
   const data: Record<string, unknown> = {};
-  const fields = [
-    "title",
-    "memo",
-    "gauge",
-    "yarns",
-    "needles",
-    "supplies",
-    "attachments",
-    "progress",
-    "difficulty",
-    "tags",
-    "folder",
-    "counters",
-    "status",
-    "position",
-  ];
+  const fields = ["type", "name", "brand", "color", "weight", "quantity", "notes", "imageUrl"];
 
   for (const field of fields) {
     if (body[field] !== undefined) {
@@ -32,19 +17,12 @@ export async function PATCH(
     }
   }
 
-  if (body.startDate !== undefined) {
-    data.startDate = body.startDate ? new Date(body.startDate) : null;
-  }
-  if (body.endDate !== undefined) {
-    data.endDate = body.endDate ? new Date(body.endDate) : null;
-  }
-
-  const project = await prisma.project.update({
+  const material = await prisma.material.update({
     where: { id },
     data,
   });
 
-  return NextResponse.json(project);
+  return NextResponse.json(material);
 }
 
 export async function DELETE(
@@ -52,8 +30,6 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-
-  await prisma.project.delete({ where: { id } });
-
+  await prisma.material.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }

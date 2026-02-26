@@ -8,8 +8,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "뜨개노트",
-  description: "뜨개질 프로젝트 관리 칸반보드",
+  title: "YarnLog",
+  description: "나의 뜨개질 프로젝트 기록",
 };
 
 export default function RootLayout({
