@@ -21,65 +21,62 @@ export default function CompactProjectCard({
   const needles = (project.needles as unknown as NeedleInfo[]) || [];
 
   return (
-    <div className="tape bg-postit-yellow border border-amber-200 rounded-sm p-3 shadow-sm hover:shadow-md transition-shadow group">
+    <div className="bg-white border border-warm-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all group">
       <div className="cursor-pointer" onClick={onClick}>
         {project.folder && (
-          <span className="text-[10px] text-warm-400 block mb-0.5">
+          <span className="text-[10px] text-warm-300 font-medium tracking-wide uppercase">
             {project.folder}
           </span>
         )}
-        <h3 className="text-sm font-bold text-warm-800 truncate mb-1">
+        <h3 className="text-sm font-semibold text-warm-800 truncate mt-0.5 mb-1.5 group-hover:text-accent transition-colors">
           {project.title}
         </h3>
         {project.memo && (
-          <p className="text-xs text-warm-500 line-clamp-1 mb-2">
+          <p className="text-xs text-warm-400 line-clamp-1 mb-2">
             {project.memo}
           </p>
         )}
 
-        {/* 진행률 바 */}
         {project.progress > 0 && (
-          <div className="mb-2">
-            <div className="flex items-center gap-1.5">
-              <div className="flex-1 h-1.5 bg-warm-200/60 rounded-full overflow-hidden">
+          <div className="mb-2.5">
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-1 bg-warm-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-rose-main rounded-full"
+                  className="h-full bg-accent/60 rounded-full transition-all"
                   style={{ width: `${project.progress}%` }}
                 />
               </div>
-              <span className="text-[10px] text-warm-400">
+              <span className="text-[10px] text-warm-400 tabular-nums">
                 {project.progress}%
               </span>
             </div>
           </div>
         )}
 
-        {/* 뱃지 */}
         <div className="flex flex-wrap gap-1">
           {yarns.length > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-warm-50 text-warm-500 border border-warm-100">
               {yarns[0].name}{yarns.length > 1 && ` +${yarns.length - 1}`}
             </span>
           )}
           {needles.length > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-warm-50 text-warm-500 border border-warm-100">
               {needles[0].size}{needles.length > 1 && ` +${needles.length - 1}`}
             </span>
           )}
           {project.difficulty > 1 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-warm-50 text-warm-500 border border-warm-100">
               {difficultyLabel[project.difficulty]}
             </span>
           )}
         </div>
       </div>
 
-      {/* 시작하기 버튼 */}
       <button
         onClick={() => onStatusChange(project.id, "in-progress")}
-        className="mt-2 w-full flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors opacity-0 group-hover:opacity-100"
+        className="mt-3 w-full flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-xs font-medium text-accent bg-accent-light hover:bg-accent hover:text-white transition-all opacity-0 group-hover:opacity-100"
       >
-        <Play size={12} />
+        <Play size={11} />
         시작하기
       </button>
     </div>

@@ -16,7 +16,6 @@ import {
   Trash2,
   ExternalLink,
   FileText,
-  Image as ImageIcon,
   X,
 } from "lucide-react";
 
@@ -30,7 +29,6 @@ interface ProjectDetailProps {
 }
 
 const difficultyLabel = ["", "입문", "초급", "중급", "고급", "마스터"];
-const difficultyStars = ["", "★", "★★", "★★★", "★★★★", "★★★★★"];
 
 const statusLabel: Record<ProjectStatus, string> = {
   todo: "예정",
@@ -39,9 +37,9 @@ const statusLabel: Record<ProjectStatus, string> = {
 };
 
 const statusColor: Record<ProjectStatus, string> = {
-  todo: "bg-amber-100 text-amber-700",
-  "in-progress": "bg-blue-100 text-blue-700",
-  done: "bg-green-100 text-green-700",
+  todo: "bg-accent-light text-accent",
+  "in-progress": "bg-sky-light text-sky-main",
+  done: "bg-sage-light text-sage-main",
 };
 
 function formatDate(date: Date | string | null | undefined): string {
@@ -120,62 +118,60 @@ export default function ProjectDetail({
   return (
     <>
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       >
         <div
-          className="bg-warm-50 rounded-lg shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] overflow-hidden"
+          className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[85vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 상단 */}
-          <div className="flex items-center justify-between px-6 pt-4 pb-2">
+          <div className="flex items-center justify-between px-6 pt-5 pb-3">
             <span
-              className={`text-sm font-medium px-3 py-1 rounded-full ${statusColor[status]}`}
+              className={`text-xs font-medium px-3 py-1 rounded-full ${statusColor[status]}`}
             >
               {statusLabel[status]}
             </span>
             <button
               onClick={onClose}
-              className="text-warm-400 hover:text-warm-600 text-xl transition-colors"
+              className="text-warm-300 hover:text-warm-600 p-1 rounded-lg hover:bg-warm-50 transition-all"
             >
-              &times;
+              <X size={18} />
             </button>
           </div>
 
           <div className="overflow-y-auto max-h-[calc(85vh-140px)] px-6 pb-6">
-            {/* 폴더 + 제목 */}
             {project.folder && (
-              <span className="text-xs text-warm-400 mb-1 block">
+              <span className="text-[11px] text-warm-400 font-medium tracking-wide uppercase mb-1 block">
                 {project.folder}
               </span>
             )}
-            <h2 className="text-3xl text-warm-800 mb-4 leading-tight">
+            <h2 className="font-serif text-2xl text-warm-800 mb-5 leading-tight">
               {project.title}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
               {/* 왼쪽 (3/5) */}
-              <div className="md:col-span-3 space-y-4">
+              <div className="md:col-span-3 space-y-5">
                 {project.memo && (
                   <div>
-                    <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-1">
+                    <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-2">
                       메모
                     </h3>
-                    <p className="text-warm-700 whitespace-pre-wrap leading-relaxed">
+                    <p className="text-warm-600 whitespace-pre-wrap leading-relaxed text-sm">
                       {project.memo}
                     </p>
                   </div>
                 )}
 
-                {/* 재료 정보 */}
                 {(yarns.length > 0 || needles.length > 0 || supplies.length > 0 || project.gauge) && (
-                  <div className="bg-white/50 rounded-lg p-4 space-y-3">
-                    <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider">
+                  <div className="bg-warm-50 rounded-xl p-4 space-y-3">
+                    <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider">
                       재료 정보
                     </h3>
                     {yarns.length > 0 && (
                       <div>
-                        <span className="text-xs text-warm-500 block mb-1">
+                        <span className="text-xs text-warm-400 block mb-1">
                           실
                         </span>
                         {yarns.map((y, i) => (
@@ -205,7 +201,7 @@ export default function ProjectDetail({
                     )}
                     {needles.length > 0 && (
                       <div>
-                        <span className="text-xs text-warm-500 block mb-1">
+                        <span className="text-xs text-warm-400 block mb-1">
                           바늘
                         </span>
                         {needles.map((n, i) => (
@@ -221,7 +217,7 @@ export default function ProjectDetail({
                     )}
                     {project.gauge && (
                       <div>
-                        <span className="text-xs text-warm-500 block mb-1">
+                        <span className="text-xs text-warm-400 block mb-1">
                           게이지
                         </span>
                         <span className="text-sm text-warm-700 font-medium">
@@ -231,7 +227,7 @@ export default function ProjectDetail({
                     )}
                     {supplies.length > 0 && (
                       <div>
-                        <span className="text-xs text-warm-500 block mb-1">
+                        <span className="text-xs text-warm-400 block mb-1">
                           부자재
                         </span>
                         {supplies.map((s, i) => (
@@ -257,21 +253,19 @@ export default function ProjectDetail({
                   </div>
                 )}
 
-                {/* 첨부파일 */}
                 {attachments.length > 0 && (
                   <div>
-                    <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-3">
+                    <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-3">
                       첨부파일
                     </h3>
                     <div className="space-y-3">
-                      {/* 이미지 미리보기 */}
                       {imageAttachments.length > 0 && (
                         <div className="grid grid-cols-3 gap-2">
                           {imageAttachments.map((att) => (
                             <button
                               key={att.id}
                               onClick={() => setPreviewImage(att.url)}
-                              className="aspect-square rounded-lg overflow-hidden bg-warm-100 hover:opacity-80 transition-opacity"
+                              className="aspect-square rounded-xl overflow-hidden bg-warm-50 hover:opacity-80 transition-opacity"
                             >
                               <img
                                 src={att.url}
@@ -283,13 +277,12 @@ export default function ProjectDetail({
                         </div>
                       )}
 
-                      {/* 유튜브 */}
                       {youtubeAttachments.map((att) => {
                         const ytId = getYoutubeId(att.url);
                         return ytId ? (
                           <div
                             key={att.id}
-                            className="aspect-video rounded-lg overflow-hidden"
+                            className="aspect-video rounded-xl overflow-hidden"
                           >
                             <iframe
                               src={`https://www.youtube.com/embed/${ytId}`}
@@ -312,32 +305,30 @@ export default function ProjectDetail({
                         );
                       })}
 
-                      {/* PDF */}
                       {pdfAttachments.map((att) => (
                         <a
                           key={att.id}
                           href={att.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-3 py-2 bg-white/50 rounded-lg text-sm text-warm-700 hover:bg-white/80 transition-colors"
+                          className="flex items-center gap-2 px-4 py-3 bg-warm-50 rounded-xl text-sm text-warm-700 hover:bg-warm-100 transition-all"
                         >
-                          <FileText size={16} className="text-red-400" />
+                          <FileText size={15} className="text-rose-main" />
                           {att.name}
                           <ExternalLink
                             size={12}
-                            className="text-warm-400 ml-auto"
+                            className="text-warm-300 ml-auto"
                           />
                         </a>
                       ))}
 
-                      {/* URL */}
                       {urlAttachments.map((att) => (
                         <a
                           key={att.id}
                           href={att.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-3 py-2 bg-white/50 rounded-lg text-sm text-sky-main hover:bg-white/80 transition-colors break-all"
+                          className="flex items-center gap-2 px-4 py-3 bg-warm-50 rounded-xl text-sm text-sky-main hover:bg-warm-100 transition-all break-all"
                         >
                           <ExternalLink size={14} className="flex-shrink-0" />
                           {att.name}
@@ -349,36 +340,36 @@ export default function ProjectDetail({
 
                 {/* 단수 카운터 */}
                 <div>
-                  <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-3">
+                  <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-3">
                     단수 카운터
                   </h3>
                   <div className="space-y-2">
                     {counters.map((counter) => (
                       <div
                         key={counter.id}
-                        className="flex items-center gap-2 bg-white/50 rounded-lg px-3 py-2"
+                        className="flex items-center gap-2.5 bg-warm-50 rounded-xl px-4 py-2.5"
                       >
                         <span className="text-sm text-warm-600 flex-1 truncate">
                           {counter.name}
                         </span>
                         <button
                           onClick={() => updateCount(counter.id, -1)}
-                          className="w-7 h-7 flex items-center justify-center rounded-full bg-warm-200 text-warm-600 hover:bg-warm-300 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-white text-warm-500 hover:bg-warm-200 transition-all border border-warm-100"
                         >
-                          <Minus size={14} />
+                          <Minus size={13} />
                         </button>
                         <span className="text-lg font-semibold text-warm-800 min-w-[40px] text-center tabular-nums">
                           {counter.value}
                         </span>
                         <button
                           onClick={() => updateCount(counter.id, 1)}
-                          className="w-7 h-7 flex items-center justify-center rounded-full bg-rose-main text-white hover:bg-rose-main/80 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-accent text-white hover:bg-accent/85 transition-all"
                         >
-                          <Plus size={14} />
+                          <Plus size={13} />
                         </button>
                         <button
                           onClick={() => removeCounter(counter.id)}
-                          className="w-7 h-7 flex items-center justify-center rounded-full text-warm-300 hover:text-red-400 hover:bg-red-50 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg text-warm-300 hover:text-red-400 hover:bg-red-50 transition-all"
                         >
                           <Trash2 size={12} />
                         </button>
@@ -397,11 +388,11 @@ export default function ProjectDetail({
                           }
                         }}
                         placeholder="카운터 이름"
-                        className="flex-1 px-3 py-1.5 bg-white/70 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                        className="flex-1 px-3 py-2 bg-warm-50 border border-warm-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                       />
                       <button
                         onClick={addCounter}
-                        className="px-3 py-1.5 bg-warm-200 text-warm-600 rounded-lg hover:bg-warm-300 transition-colors text-sm"
+                        className="px-4 py-2 bg-warm-100 text-warm-600 rounded-xl hover:bg-warm-200 transition-all text-sm font-medium"
                       >
                         추가
                       </button>
@@ -412,42 +403,36 @@ export default function ProjectDetail({
 
               {/* 오른쪽 (2/5) */}
               <div className="md:col-span-2 space-y-4">
-                {/* 진행률 */}
-                <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-2">
+                <div className="bg-warm-50 rounded-xl p-4">
+                  <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-2">
                     진행률
                   </h3>
-                  <div className="flex items-end gap-2 mb-2">
-                    <span className="text-4xl text-warm-800 leading-none">
+                  <div className="flex items-end gap-1.5 mb-3">
+                    <span className="text-4xl font-serif text-warm-800 leading-none">
                       {project.progress}
                     </span>
-                    <span className="text-warm-400 text-lg mb-0.5">%</span>
+                    <span className="text-warm-300 text-lg mb-0.5">%</span>
                   </div>
-                  <div className="h-3 bg-warm-100 rounded-full overflow-hidden">
+                  <div className="h-2 bg-warm-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-rose-main rounded-full transition-all"
+                      className="h-full bg-accent rounded-full transition-all"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>
                 </div>
 
-                {/* 난이도 */}
-                <div className="bg-white/50 rounded-lg p-4">
-                  <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-1">
+                <div className="bg-warm-50 rounded-xl p-4">
+                  <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-1">
                     난이도
                   </h3>
-                  <span className="text-xl text-warm-700">
+                  <span className="text-lg text-warm-700 font-medium">
                     {difficultyLabel[project.difficulty]}
-                  </span>
-                  <span className="text-rose-main ml-2 text-sm">
-                    {difficultyStars[project.difficulty]}
                   </span>
                 </div>
 
-                {/* 날짜 */}
                 {(project.startDate || project.endDate) && (
-                  <div className="bg-white/50 rounded-lg p-4 space-y-1">
-                    <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-2">
+                  <div className="bg-warm-50 rounded-xl p-4 space-y-1.5">
+                    <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-2">
                       일정
                     </h3>
                     {project.startDate && (
@@ -463,17 +448,16 @@ export default function ProjectDetail({
                   </div>
                 )}
 
-                {/* 태그 */}
                 {project.tags.length > 0 && (
                   <div>
-                    <h3 className="text-xs font-medium text-warm-400 uppercase tracking-wider mb-2">
+                    <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-2">
                       태그
                     </h3>
                     <div className="flex flex-wrap gap-1.5">
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-sm px-2 py-0.5 rounded-full bg-warm-100 text-warm-600"
+                          className="text-xs px-2.5 py-1 rounded-full bg-warm-100 text-warm-500"
                         >
                           #{tag}
                         </span>
@@ -486,8 +470,7 @@ export default function ProjectDetail({
           </div>
 
           {/* 하단 버튼 */}
-          <div className="px-6 py-4 border-t border-warm-200/50 bg-warm-50/80 space-y-3">
-            {/* 상태 변경 */}
+          <div className="px-6 py-4 border-t border-warm-100 space-y-3">
             {onStatusChange && (
               <div className="flex gap-2">
                 {status !== "in-progress" && (
@@ -496,7 +479,7 @@ export default function ProjectDetail({
                       onStatusChange(project.id, "in-progress");
                       onClose();
                     }}
-                    className="flex-1 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                    className="flex-1 py-2 text-sm font-medium text-sky-main bg-sky-light hover:bg-sky-main hover:text-white rounded-xl transition-all"
                   >
                     진행중으로
                   </button>
@@ -507,7 +490,7 @@ export default function ProjectDetail({
                       onStatusChange(project.id, "todo");
                       onClose();
                     }}
-                    className="flex-1 py-1.5 text-sm font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors"
+                    className="flex-1 py-2 text-sm font-medium text-accent bg-accent-light hover:bg-accent hover:text-white rounded-xl transition-all"
                   >
                     예정으로
                   </button>
@@ -518,7 +501,7 @@ export default function ProjectDetail({
                       onStatusChange(project.id, "done");
                       onClose();
                     }}
-                    className="flex-1 py-1.5 text-sm font-medium text-green-600 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+                    className="flex-1 py-2 text-sm font-medium text-sage-main bg-sage-light hover:bg-sage-main hover:text-white rounded-xl transition-all"
                   >
                     완료
                   </button>
@@ -531,20 +514,20 @@ export default function ProjectDetail({
                 onClick={() => {
                   if (confirm("정말 삭제할까요?")) onDelete();
                 }}
-                className="text-sm text-red-400 hover:text-red-600 transition-colors"
+                className="text-sm text-warm-300 hover:text-red-500 transition-colors"
               >
                 삭제
               </button>
               <div className="flex gap-2">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-warm-500 hover:bg-warm-100 rounded-lg transition-colors"
+                  className="px-5 py-2.5 text-warm-500 hover:bg-warm-50 rounded-xl transition-all"
                 >
                   닫기
                 </button>
                 <button
                   onClick={onEdit}
-                  className="px-4 py-2 bg-warm-700 text-white rounded-lg hover:bg-warm-800 transition-colors"
+                  className="px-5 py-2.5 bg-warm-800 text-white rounded-xl hover:bg-warm-700 transition-colors"
                 >
                   수정
                 </button>
@@ -554,7 +537,6 @@ export default function ProjectDetail({
         </div>
       </div>
 
-      {/* 이미지 확대 미리보기 */}
       {previewImage && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70"
@@ -569,7 +551,7 @@ export default function ProjectDetail({
           <img
             src={previewImage}
             alt="미리보기"
-            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+            className="max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
           />
         </div>
       )}

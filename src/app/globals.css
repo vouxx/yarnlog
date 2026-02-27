@@ -1,36 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e8d5b7;
-  --foreground: #2d2926;
+  --background: #F6F3EB;
+  --foreground: #40513B;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --color-warm-50: #fdf8f0;
-  --color-warm-100: #f5ede0;
-  --color-warm-200: #e8dcc8;
-  --color-warm-300: #d4c4a8;
-  --color-warm-400: #b8a080;
-  --color-warm-500: #9c8060;
-  --color-warm-600: #7a6048;
-  --color-warm-700: #5c4838;
-  --color-warm-800: #3e3028;
-  --color-warm-900: #201818;
-  --color-rose-light: #f9e8e8;
-  --color-rose-main: #d4837a;
-  --color-sage-light: #e8f0e8;
-  --color-sage-main: #7a9e7a;
-  --color-sky-light: #e8eef8;
-  --color-sky-main: #7a8eb4;
-  --color-postit-yellow: #fff9c4;
-  --color-postit-pink: #fce4ec;
-  --color-postit-green: #e8f5e9;
-  --color-postit-blue: #e3f2fd;
-  --color-desk: #c9a96e;
-  --color-desk-dark: #a07d50;
+  --font-serif: var(--font-noto-serif);
+
+  /* Neutral scale (beige → olive) */
+  --color-warm-50: #FDFBF7;
+  --color-warm-100: #F5F1E8;
+  --color-warm-200: #EBE4D1;
+  --color-warm-300: #E5D9B6;
+  --color-warm-400: #C4BB9E;
+  --color-warm-500: #98926E;
+  --color-warm-600: #6E6B52;
+  --color-warm-700: #4F5C43;
+  --color-warm-800: #40513B;
+  --color-warm-900: #2D3928;
+
+  /* Primary green */
+  --color-primary-light: #EBF0E4;
+  --color-primary: #628141;
+  --color-primary-dark: #40513B;
+
+  /* Accent orange */
+  --color-accent: #E67E22;
+  --color-accent-light: #FDF0E0;
+
+  /* Semantic: yarn / todo */
+  --color-rose-light: #FDF0E0;
+  --color-rose-main: #E67E22;
+
+  /* Semantic: in-progress / active */
+  --color-sky-light: #EBF0E4;
+  --color-sky-main: #628141;
+
+  /* Semantic: done / settled */
+  --color-sage-light: #E4EBE0;
+  --color-sage-main: #40513B;
 }
 
 body {
@@ -39,81 +51,17 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
-/* 책상 나무결 텍스처 배경 */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 80px,
-      rgba(0,0,0,0.02) 80px,
-      rgba(0,0,0,0.02) 81px
-    ),
-    repeating-linear-gradient(
-      85deg,
-      transparent,
-      transparent 120px,
-      rgba(0,0,0,0.015) 120px,
-      rgba(0,0,0,0.015) 121px
-    ),
-    linear-gradient(
-      180deg,
-      #d4b88a 0%,
-      #c9a96e 30%,
-      #d4b88a 60%,
-      #c4a06a 100%
-    );
-}
-
-/* 포스트잇 테이프 장식 */
-.tape {
-  position: relative;
-}
-.tape::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-1deg);
-  width: 50px;
-  height: 14px;
-  background: rgba(255, 255, 255, 0.45);
-  border-radius: 1px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-  z-index: 1;
-}
-
-
-/* 마스킹 테이프 느낌 */
-.masking-tape {
-  position: relative;
-  display: inline-block;
-}
-.masking-tape::before {
-  content: "";
-  position: absolute;
-  inset: -4px -12px;
-  background: rgba(255, 255, 255, 0.3);
-  transform: rotate(-0.5deg);
-  z-index: -1;
-  border-radius: 2px;
-}
-
-/* 스크롤바 스타일 */
+/* 스크롤바 */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-warm-300);
+  background: var(--color-warm-400);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-warm-400);
+  background: var(--color-warm-500);
 }

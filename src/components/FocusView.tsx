@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Project } from "@prisma/client";
 import { ProjectFormData, ProjectStatus, YarnInfo } from "@/types/project";
-import { Scissors, Clock, CheckCircle, Layers, Package } from "lucide-react";
+import { Scissors, Clock, CheckCircle, TrendingUp, Package } from "lucide-react";
 import FocusHeader from "./FocusHeader";
 import FocusSection from "./FocusSection";
 import ActiveProjectCard from "./ActiveProjectCard";
@@ -41,7 +41,6 @@ export default function FocusView() {
     fetchProjects();
   }, [fetchProjects]);
 
-  // 폴더 목록
   const folders = useMemo(() => {
     const set = new Set<string>();
     projects.forEach((p) => {
@@ -50,7 +49,6 @@ export default function FocusView() {
     return Array.from(set).sort((a, b) => a.localeCompare(b, "ko"));
   }, [projects]);
 
-  // 필터링
   const filteredProjects = useMemo(() => {
     let filtered = projects;
 
@@ -90,14 +88,12 @@ export default function FocusView() {
     });
   }, [projects, activeFolder, searchQuery, sortBy]);
 
-  // 상태별 프로젝트
   const inProgressProjects = filteredProjects.filter(
     (p) => p.status === "in-progress"
   );
   const todoProjects = filteredProjects.filter((p) => p.status === "todo");
   const doneProjects = filteredProjects.filter((p) => p.status === "done");
 
-  // 통계
   const avgProgress =
     inProgressProjects.length > 0
       ? Math.round(
@@ -106,7 +102,6 @@ export default function FocusView() {
         )
       : 0;
 
-  // 상태 변경
   const handleStatusChange = async (
     projectId: string,
     newStatus: string
@@ -126,7 +121,6 @@ export default function FocusView() {
     fetchProjects();
   };
 
-  // 프로젝트 업데이트
   const handleProjectUpdate = (updated: Project) => {
     setProjects((prev) =>
       prev.map((p) => (p.id === updated.id ? updated : p))
@@ -136,7 +130,6 @@ export default function FocusView() {
     }
   };
 
-  // 모달 핸들러
   const openDetail = (project: Project) => {
     setDetailProject(project);
   };
@@ -202,31 +195,40 @@ export default function FocusView() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
-      {/* 메인 탭 */}
-      <div className="flex items-center gap-1 border-b border-warm-200/50">
-        <button
-          onClick={() => setActiveTab("projects")}
-          className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
-            activeTab === "projects"
-              ? "border-warm-700 text-warm-800"
-              : "border-transparent text-warm-400 hover:text-warm-600"
-          }`}
-        >
-          <Scissors size={15} />
-          프로젝트
-        </button>
-        <button
-          onClick={() => setActiveTab("stash")}
-          className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
-            activeTab === "stash"
-              ? "border-warm-700 text-warm-800"
-              : "border-transparent text-warm-400 hover:text-warm-600"
-          }`}
-        >
-          <Package size={15} />
-          재료함
-        </button>
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      {/* 헤더 타이틀 */}
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="font-serif text-2xl text-warm-800 tracking-tight">
+            YarnLog
+          </h1>
+          <p className="text-sm text-warm-400 mt-0.5">나의 뜨개질 기록</p>
+        </div>
+        {/* 메인 탭 */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setActiveTab("projects")}
+            className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full transition-all ${
+              activeTab === "projects"
+                ? "bg-warm-800 text-white shadow-sm"
+                : "text-warm-400 hover:text-warm-600 hover:bg-warm-100"
+            }`}
+          >
+            <Scissors size={14} />
+            프로젝트
+          </button>
+          <button
+            onClick={() => setActiveTab("stash")}
+            className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full transition-all ${
+              activeTab === "stash"
+                ? "bg-warm-800 text-white shadow-sm"
+                : "text-warm-400 hover:text-warm-600 hover:bg-warm-100"
+            }`}
+          >
+            <Package size={14} />
+            재료함
+          </button>
+        </div>
       </div>
 
       {activeTab === "stash" ? (
@@ -246,53 +248,61 @@ export default function FocusView() {
       />
 
       {/* 통계 카드 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-warm-50/90 backdrop-blur-sm rounded-lg p-4 shadow-md">
-          <div className="flex items-center gap-2 mb-1">
-            <Scissors size={14} className="text-blue-500" />
-            <span className="text-xs text-warm-400">진행중</span>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-warm-100">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg bg-sky-light flex items-center justify-center">
+              <Scissors size={13} className="text-sky-main" />
+            </div>
+            <span className="text-xs text-warm-400 font-medium">진행중</span>
           </div>
-          <span className="text-2xl font-bold text-warm-800">
+          <span className="text-3xl font-serif text-warm-800">
             {inProgressProjects.length}
           </span>
         </div>
-        <div className="bg-warm-50/90 backdrop-blur-sm rounded-lg p-4 shadow-md">
-          <div className="flex items-center gap-2 mb-1">
-            <Clock size={14} className="text-amber-500" />
-            <span className="text-xs text-warm-400">예정</span>
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-warm-100">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg bg-accent-light flex items-center justify-center">
+              <Clock size={13} className="text-accent" />
+            </div>
+            <span className="text-xs text-warm-400 font-medium">예정</span>
           </div>
-          <span className="text-2xl font-bold text-warm-800">
+          <span className="text-3xl font-serif text-warm-800">
             {todoProjects.length}
           </span>
         </div>
-        <div className="bg-warm-50/90 backdrop-blur-sm rounded-lg p-4 shadow-md">
-          <div className="flex items-center gap-2 mb-1">
-            <CheckCircle size={14} className="text-green-500" />
-            <span className="text-xs text-warm-400">완성</span>
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-warm-100">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg bg-sage-light flex items-center justify-center">
+              <CheckCircle size={13} className="text-sage-main" />
+            </div>
+            <span className="text-xs text-warm-400 font-medium">완성</span>
           </div>
-          <span className="text-2xl font-bold text-warm-800">
+          <span className="text-3xl font-serif text-warm-800">
             {doneProjects.length}
           </span>
         </div>
-        <div className="bg-warm-50/90 backdrop-blur-sm rounded-lg p-4 shadow-md">
-          <div className="flex items-center gap-2 mb-1">
-            <Layers size={14} className="text-rose-main" />
-            <span className="text-xs text-warm-400">평균 진행률</span>
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-warm-100">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg bg-rose-light flex items-center justify-center">
+              <TrendingUp size={13} className="text-rose-main" />
+            </div>
+            <span className="text-xs text-warm-400 font-medium">평균 진행률</span>
           </div>
-          <span className="text-2xl font-bold text-warm-800">
+          <span className="text-3xl font-serif text-warm-800">
             {avgProgress}
-            <span className="text-sm font-normal text-warm-400">%</span>
+            <span className="text-base font-sans font-normal text-warm-300 ml-0.5">%</span>
           </span>
         </div>
       </div>
 
       {/* 프로젝트가 없을 때 */}
       {projects.length === 0 && (
-        <div className="text-center py-20 text-warm-400">
-          <p className="text-lg mb-2">아직 프로젝트가 없어요</p>
+        <div className="text-center py-24">
+          <p className="font-serif text-xl text-warm-300 mb-3">아직 프로젝트가 없어요</p>
           <button
             onClick={() => openCreateModal("todo")}
-            className="text-sm text-rose-main hover:underline"
+            className="text-sm text-accent hover:text-accent/80 underline underline-offset-4 transition-colors"
           >
             첫 프로젝트 만들기
           </button>
@@ -301,14 +311,12 @@ export default function FocusView() {
 
       {/* 메인 2열 레이아웃 */}
       {projects.length > 0 && (
-        <div className="flex gap-6">
-          {/* 왼쪽: 진행중 + 예정 */}
-          <div className="flex-1 min-w-0 space-y-6">
-            {/* 지금 뜨고 있는 것 */}
+        <div className="flex gap-8">
+          <div className="flex-1 min-w-0 space-y-8">
             <FocusSection
               title="지금 뜨고 있는 것"
               count={inProgressProjects.length}
-              accentColor="bg-blue-100/80 text-blue-700"
+              accentColor="text-sky-main"
             >
               {inProgressProjects.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -321,20 +329,19 @@ export default function FocusView() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-warm-400 bg-warm-50/50 rounded-lg">
+                <div className="text-center py-10 text-warm-300 bg-warm-50 rounded-2xl border border-dashed border-warm-200">
                   <p className="text-sm mb-1">진행중인 프로젝트가 없어요</p>
-                  <p className="text-xs">
+                  <p className="text-xs text-warm-300">
                     아래 예정 목록에서 시작해보세요
                   </p>
                 </div>
               )}
             </FocusSection>
 
-            {/* 다음에 뜰 것 */}
             <FocusSection
               title="다음에 뜰 것"
               count={todoProjects.length}
-              accentColor="bg-amber-100/80 text-amber-700"
+              accentColor="text-accent"
             >
               {todoProjects.length > 0 ? (
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
@@ -348,14 +355,13 @@ export default function FocusView() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-6 text-warm-400 bg-warm-50/50 rounded-lg">
+                <div className="text-center py-8 text-warm-300 bg-warm-50 rounded-2xl border border-dashed border-warm-200">
                   <p className="text-sm">예정된 프로젝트가 없어요</p>
                 </div>
               )}
             </FocusSection>
           </div>
 
-          {/* 오른쪽: 도구 + 최근 완성 */}
           <div className="w-64 flex-shrink-0 hidden md:block">
             <DashboardSidebar
               doneProjects={doneProjects}
@@ -370,7 +376,7 @@ export default function FocusView() {
         <FocusSection
           title="완성"
           count={doneProjects.length}
-          accentColor="bg-green-100/80 text-green-700"
+          accentColor="text-sage-main"
           defaultCollapsed={doneProjects.length > 8}
         >
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -388,7 +394,6 @@ export default function FocusView() {
       </>
       )}
 
-      {/* 상세 보기 */}
       {detailProject && (
         <ProjectDetail
           project={detailProject}
@@ -400,7 +405,6 @@ export default function FocusView() {
         />
       )}
 
-      {/* 편집 모달 */}
       {modalProject !== undefined && (
         <ProjectModal
           project={modalProject}

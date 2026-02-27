@@ -326,11 +326,11 @@ export default function KanbanBoard() {
 
           {/* 프로젝트가 아예 없을 때 */}
           {projects.length === 0 && (
-            <div className="text-center py-20 text-warm-400">
-              <p className="text-lg mb-2">아직 프로젝트가 없어요</p>
+            <div className="text-center py-24">
+              <p className="font-serif text-xl text-warm-300 mb-3">아직 프로젝트가 없어요</p>
               <button
                 onClick={() => openCreateModal("todo")}
-                className="text-sm text-rose-main hover:underline"
+                className="text-sm text-accent hover:text-accent/80 underline underline-offset-4 transition-colors"
               >
                 첫 프로젝트 만들기
               </button>

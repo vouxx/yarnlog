@@ -10,7 +10,7 @@ import {
   SupplyInfo,
   Attachment,
 } from "@/types/project";
-import { Plus, X, Upload, Link, Youtube } from "lucide-react";
+import { Plus, X, Upload, Link } from "lucide-react";
 
 interface ProjectModalProps {
   project?: Project | null;
@@ -92,7 +92,6 @@ export default function ProjectModal({
     onSave(form);
   };
 
-  // --- 태그 ---
   const addTag = () => {
     const tag = tagInput.trim();
     if (tag && !form.tags?.includes(tag)) {
@@ -104,7 +103,6 @@ export default function ProjectModal({
     setForm({ ...form, tags: form.tags?.filter((t) => t !== tag) });
   };
 
-  // --- 실 ---
   const addYarn = () => {
     setForm({
       ...form,
@@ -120,7 +118,6 @@ export default function ProjectModal({
     setForm({ ...form, yarns: form.yarns?.filter((_, i) => i !== index) });
   };
 
-  // --- 바늘 ---
   const addNeedle = () => {
     setForm({
       ...form,
@@ -136,7 +133,6 @@ export default function ProjectModal({
     setForm({ ...form, needles: form.needles?.filter((_, i) => i !== index) });
   };
 
-  // --- 부자재 ---
   const addSupply = () => {
     setForm({
       ...form,
@@ -152,7 +148,6 @@ export default function ProjectModal({
     setForm({ ...form, supplies: form.supplies?.filter((_, i) => i !== index) });
   };
 
-  // --- 첨부 ---
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files?.length) return;
@@ -225,9 +220,15 @@ export default function ProjectModal({
 
   const isEdit = !!project;
 
+  const inputClass =
+    "w-full px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all";
+  const smallInputClass =
+    "px-3 py-2 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all";
+  const labelClass = "block text-sm font-medium text-warm-600 mb-1.5";
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -235,21 +236,19 @@ export default function ProjectModal({
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
-          <div className="p-6 space-y-4">
-            <h2 className="text-xl font-bold text-warm-800">
+          <div className="p-6 space-y-5">
+            <h2 className="font-serif text-xl text-warm-800">
               {isEdit ? "프로젝트 수정" : "새 프로젝트"}
             </h2>
 
             {/* 제목 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                프로젝트 이름 *
-              </label>
+              <label className={labelClass}>프로젝트 이름 *</label>
               <input
                 type="text"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30 focus:border-rose-main"
+                className={inputClass}
                 placeholder="예: 케이블 니트 스웨터"
                 autoFocus
               />
@@ -257,16 +256,14 @@ export default function ProjectModal({
 
             {/* 폴더 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                폴더
-              </label>
+              <label className={labelClass}>폴더</label>
               <div className="flex gap-2">
                 <select
                   value={form.folder}
                   onChange={(e) =>
                     setForm({ ...form, folder: e.target.value })
                   }
-                  className="flex-1 px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30 focus:border-rose-main"
+                  className={`flex-1 ${inputClass}`}
                 >
                   <option value="">미분류</option>
                   {[...new Set([...folders, ...(form.folder ? [form.folder] : [])])]
@@ -291,7 +288,7 @@ export default function ProjectModal({
                       }
                     }
                   }}
-                  className="w-28 px-2 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className={`w-28 ${smallInputClass}`}
                   placeholder="새 폴더"
                 />
                 <button
@@ -303,7 +300,7 @@ export default function ProjectModal({
                       setNewFolder("");
                     }
                   }}
-                  className="px-2 py-2 bg-warm-100 text-warm-600 rounded-lg hover:bg-warm-200 transition-colors text-sm"
+                  className="px-3 py-2.5 bg-warm-100 text-warm-600 rounded-xl hover:bg-warm-200 transition-all text-sm"
                 >
                   +
                 </button>
@@ -312,13 +309,11 @@ export default function ProjectModal({
 
             {/* 메모 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                메모
-              </label>
+              <label className={labelClass}>메모</label>
               <textarea
                 value={form.memo}
                 onChange={(e) => setForm({ ...form, memo: e.target.value })}
-                className="w-full px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30 resize-none"
+                className={`${inputClass} resize-none`}
                 rows={3}
                 placeholder="자유롭게 메모..."
               />
@@ -326,9 +321,7 @@ export default function ProjectModal({
 
             {/* 실 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                사용하는 실
-              </label>
+              <label className={labelClass}>사용하는 실</label>
               <div className="space-y-2">
                 {form.yarns?.map((yarn, i) => (
                   <div key={i} className="flex gap-1.5 items-start">
@@ -336,27 +329,27 @@ export default function ProjectModal({
                       type="text"
                       value={yarn.name}
                       onChange={(e) => updateYarn(i, "name", e.target.value)}
-                      className="flex-1 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`flex-1 ${smallInputClass}`}
                       placeholder="실 이름"
                     />
                     <input
                       type="text"
                       value={yarn.color || ""}
                       onChange={(e) => updateYarn(i, "color", e.target.value)}
-                      className="w-20 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`w-20 ${smallInputClass}`}
                       placeholder="색상"
                     />
                     <input
                       type="text"
                       value={yarn.weight || ""}
                       onChange={(e) => updateYarn(i, "weight", e.target.value)}
-                      className="w-20 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`w-20 ${smallInputClass}`}
                       placeholder="굵기"
                     />
                     <button
                       type="button"
                       onClick={() => removeYarn(i)}
-                      className="p-1.5 text-warm-400 hover:text-red-500 transition-colors"
+                      className="p-2 text-warm-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all"
                     >
                       <X size={14} />
                     </button>
@@ -365,7 +358,7 @@ export default function ProjectModal({
                 <button
                   type="button"
                   onClick={addYarn}
-                  className="flex items-center gap-1 text-sm text-warm-500 hover:text-warm-700 transition-colors"
+                  className="flex items-center gap-1 text-sm text-warm-400 hover:text-accent transition-colors"
                 >
                   <Plus size={14} />
                   실 추가
@@ -375,9 +368,7 @@ export default function ProjectModal({
 
             {/* 바늘 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                사용하는 바늘
-              </label>
+              <label className={labelClass}>사용하는 바늘</label>
               <div className="space-y-2">
                 {form.needles?.map((needle, i) => (
                   <div key={i} className="flex gap-1.5 items-start">
@@ -385,20 +376,20 @@ export default function ProjectModal({
                       type="text"
                       value={needle.type}
                       onChange={(e) => updateNeedle(i, "type", e.target.value)}
-                      className="flex-1 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`flex-1 ${smallInputClass}`}
                       placeholder="종류 (대바늘, 코바늘...)"
                     />
                     <input
                       type="text"
                       value={needle.size}
                       onChange={(e) => updateNeedle(i, "size", e.target.value)}
-                      className="w-24 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`w-24 ${smallInputClass}`}
                       placeholder="호수"
                     />
                     <button
                       type="button"
                       onClick={() => removeNeedle(i)}
-                      className="p-1.5 text-warm-400 hover:text-red-500 transition-colors"
+                      className="p-2 text-warm-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all"
                     >
                       <X size={14} />
                     </button>
@@ -407,7 +398,7 @@ export default function ProjectModal({
                 <button
                   type="button"
                   onClick={addNeedle}
-                  className="flex items-center gap-1 text-sm text-warm-500 hover:text-warm-700 transition-colors"
+                  className="flex items-center gap-1 text-sm text-warm-400 hover:text-accent transition-colors"
                 >
                   <Plus size={14} />
                   바늘 추가
@@ -417,9 +408,7 @@ export default function ProjectModal({
 
             {/* 부자재 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                부자재
-              </label>
+              <label className={labelClass}>부자재</label>
               <div className="space-y-2">
                 {form.supplies?.map((supply, i) => (
                   <div key={i} className="flex gap-1.5 items-start">
@@ -427,20 +416,20 @@ export default function ProjectModal({
                       type="text"
                       value={supply.name}
                       onChange={(e) => updateSupply(i, "name", e.target.value)}
-                      className="flex-1 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`flex-1 ${smallInputClass}`}
                       placeholder="부자재 이름"
                     />
                     <input
                       type="text"
                       value={supply.quantity || ""}
                       onChange={(e) => updateSupply(i, "quantity", e.target.value)}
-                      className="w-20 px-2 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className={`w-20 ${smallInputClass}`}
                       placeholder="수량"
                     />
                     <button
                       type="button"
                       onClick={() => removeSupply(i)}
-                      className="p-1.5 text-warm-400 hover:text-red-500 transition-colors"
+                      className="p-2 text-warm-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all"
                     >
                       <X size={14} />
                     </button>
@@ -449,7 +438,7 @@ export default function ProjectModal({
                 <button
                   type="button"
                   onClick={addSupply}
-                  className="flex items-center gap-1 text-sm text-warm-500 hover:text-warm-700 transition-colors"
+                  className="flex items-center gap-1 text-sm text-warm-400 hover:text-accent transition-colors"
                 >
                   <Plus size={14} />
                   부자재 추가
@@ -460,27 +449,23 @@ export default function ProjectModal({
             {/* 게이지 & 난이도 */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-warm-600 mb-1">
-                  게이지
-                </label>
+                <label className={labelClass}>게이지</label>
                 <input
                   type="text"
                   value={form.gauge}
                   onChange={(e) => setForm({ ...form, gauge: e.target.value })}
-                  className="w-full px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className={inputClass}
                   placeholder="예: 20코 x 28단"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-warm-600 mb-1">
-                  난이도
-                </label>
+                <label className={labelClass}>난이도</label>
                 <select
                   value={form.difficulty}
                   onChange={(e) =>
                     setForm({ ...form, difficulty: Number(e.target.value) })
                   }
-                  className="w-full px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className={inputClass}
                 >
                   {difficultyOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -491,19 +476,16 @@ export default function ProjectModal({
               </div>
             </div>
 
-            {/* 첨부 (파일 + 링크) */}
+            {/* 첨부 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                첨부 (도안, 참고자료)
-              </label>
-              <div className="space-y-2">
-                {/* 파일 업로드 */}
+              <label className={labelClass}>첨부 (도안, 참고자료)</label>
+              <div className="space-y-2.5">
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={uploading}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-warm-100 text-warm-600 rounded-lg hover:bg-warm-200 transition-colors text-sm disabled:opacity-50"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-warm-50 text-warm-600 rounded-xl hover:bg-warm-100 transition-all text-sm border border-warm-100 disabled:opacity-50"
                   >
                     <Upload size={14} />
                     {uploading ? "업로드 중..." : "파일 첨부"}
@@ -518,12 +500,11 @@ export default function ProjectModal({
                   />
                 </div>
 
-                {/* URL/유튜브 입력 */}
                 <div className="flex gap-1.5">
                   <div className="relative flex-1">
                     <Link
                       size={14}
-                      className="absolute left-2.5 top-1/2 -translate-y-1/2 text-warm-400"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-300"
                     />
                     <input
                       type="text"
@@ -535,37 +516,36 @@ export default function ProjectModal({
                           addLink();
                         }
                       }}
-                      className="w-full pl-8 pr-3 py-1.5 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                      className="w-full pl-9 pr-3 py-2 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                       placeholder="URL 또는 유튜브 링크"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={addLink}
-                    className="px-3 py-1.5 bg-warm-100 text-warm-600 rounded-lg hover:bg-warm-200 transition-colors text-sm"
+                    className="px-4 py-2 bg-warm-50 text-warm-600 rounded-xl hover:bg-warm-100 transition-all text-sm border border-warm-100"
                   >
                     추가
                   </button>
                 </div>
 
-                {/* 첨부 목록 */}
                 {form.attachments && form.attachments.length > 0 && (
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     {form.attachments.map((att) => (
                       <div
                         key={att.id}
-                        className="flex items-center gap-2 px-2 py-1.5 bg-warm-50 rounded-lg"
+                        className="flex items-center gap-2 px-3 py-2 bg-warm-50 rounded-xl"
                       >
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-warm-200 text-warm-600 uppercase">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-warm-200 text-warm-500 uppercase font-medium">
                           {att.type === "youtube" ? "YT" : att.type}
                         </span>
-                        <span className="text-sm text-warm-700 truncate flex-1">
+                        <span className="text-sm text-warm-600 truncate flex-1">
                           {att.name}
                         </span>
                         <button
                           type="button"
                           onClick={() => removeAttachment(att.id)}
-                          className="text-warm-400 hover:text-red-500 transition-colors"
+                          className="text-warm-300 hover:text-red-500 transition-colors"
                         >
                           <X size={14} />
                         </button>
@@ -578,7 +558,7 @@ export default function ProjectModal({
 
             {/* 진행률 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
+              <label className={labelClass}>
                 진행률: {form.progress}%
               </label>
               <input
@@ -590,45 +570,39 @@ export default function ProjectModal({
                 onChange={(e) =>
                   setForm({ ...form, progress: Number(e.target.value) })
                 }
-                className="w-full accent-rose-main"
+                className="w-full accent-accent"
               />
             </div>
 
             {/* 날짜 */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-warm-600 mb-1">
-                  시작일
-                </label>
+                <label className={labelClass}>시작일</label>
                 <input
                   type="date"
                   value={form.startDate}
                   onChange={(e) =>
                     setForm({ ...form, startDate: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className={inputClass}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-warm-600 mb-1">
-                  완료일
-                </label>
+                <label className={labelClass}>완료일</label>
                 <input
                   type="date"
                   value={form.endDate}
                   onChange={(e) =>
                     setForm({ ...form, endDate: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className={inputClass}
                 />
               </div>
             </div>
 
             {/* 태그 */}
             <div>
-              <label className="block text-sm font-medium text-warm-600 mb-1">
-                태그
-              </label>
+              <label className={labelClass}>태그</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -640,31 +614,31 @@ export default function ProjectModal({
                       addTag();
                     }
                   }}
-                  className="flex-1 px-3 py-2 border border-warm-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className={`flex-1 ${inputClass}`}
                   placeholder="태그 입력 후 Enter"
                 />
                 <button
                   type="button"
                   onClick={addTag}
-                  className="px-3 py-2 bg-warm-100 text-warm-600 rounded-lg hover:bg-warm-200 transition-colors"
+                  className="px-4 py-2.5 bg-warm-50 text-warm-600 rounded-xl hover:bg-warm-100 transition-all border border-warm-100"
                 >
                   추가
                 </button>
               </div>
               {form.tags && form.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
                   {form.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1 text-sm px-2 py-0.5 rounded-full bg-warm-100 text-warm-600"
+                      className="inline-flex items-center gap-1 text-sm px-2.5 py-1 rounded-full bg-warm-100 text-warm-500"
                     >
                       #{tag}
                       <button
                         type="button"
                         onClick={() => removeTag(tag)}
-                        className="hover:text-warm-800"
+                        className="hover:text-warm-800 ml-0.5"
                       >
-                        x
+                        <X size={12} />
                       </button>
                     </span>
                   ))}
@@ -674,13 +648,13 @@ export default function ProjectModal({
           </div>
 
           {/* 하단 버튼 */}
-          <div className="flex items-center justify-between p-4 border-t border-warm-100">
+          <div className="flex items-center justify-between p-5 border-t border-warm-100">
             <div>
               {isEdit && onDelete && (
                 <button
                   type="button"
                   onClick={onDelete}
-                  className="text-sm text-red-400 hover:text-red-600 transition-colors"
+                  className="text-sm text-warm-300 hover:text-red-500 transition-colors"
                 >
                   삭제
                 </button>
@@ -690,13 +664,13 @@ export default function ProjectModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-warm-500 hover:bg-warm-100 rounded-lg transition-colors"
+                className="px-5 py-2.5 text-warm-500 hover:bg-warm-50 rounded-xl transition-all"
               >
                 취소
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-warm-700 text-white rounded-lg hover:bg-warm-800 transition-colors"
+                className="px-5 py-2.5 bg-warm-800 text-white rounded-xl hover:bg-warm-700 transition-colors"
               >
                 {isEdit ? "수정" : "만들기"}
               </button>

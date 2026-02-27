@@ -34,24 +34,24 @@ const typeLabel: Record<MaterialType, string> = {
   needle: "바늘",
 };
 
-const typeColors: Record<MaterialType, { bg: string; badge: string; border: string; active: string }> = {
+const typeColors: Record<MaterialType, { badge: string; border: string; active: string; accent: string }> = {
   yarn: {
-    bg: "bg-postit-pink",
-    badge: "bg-rose-main/10 text-rose-main",
-    border: "border-rose-200",
-    active: "bg-rose-main text-white",
-  },
-  supply: {
-    bg: "bg-postit-blue",
-    badge: "bg-sky-main/10 text-sky-main",
-    border: "border-blue-200",
-    active: "bg-sky-main text-white",
+    badge: "bg-accent-light text-accent",
+    border: "border-warm-100",
+    active: "bg-accent text-white",
+    accent: "border-l-accent",
   },
   needle: {
-    bg: "bg-postit-yellow",
-    badge: "bg-amber-500/10 text-amber-600",
-    border: "border-amber-200",
-    active: "bg-amber-500 text-white",
+    badge: "bg-sky-light text-sky-main",
+    border: "border-warm-100",
+    active: "bg-sky-main text-white",
+    accent: "border-l-sky-main",
+  },
+  supply: {
+    badge: "bg-warm-200 text-warm-600",
+    border: "border-warm-100",
+    active: "bg-warm-600 text-white",
+    accent: "border-l-warm-500",
   },
 };
 
@@ -159,98 +159,84 @@ export default function MaterialStash() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-warm-400">불러오는 중...</p>
+        <p className="text-warm-300">불러오는 중...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* 탭 + 추가 버튼 */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex gap-1.5">
           <button
             onClick={() => setFilter("all")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               filter === "all"
-                ? "bg-warm-700 text-white"
-                : "bg-warm-50/90 text-warm-500 hover:bg-warm-200/60"
+                ? "bg-warm-800 text-white"
+                : "text-warm-500 hover:bg-warm-100"
             }`}
           >
             전체 {materials.length}
           </button>
           <button
             onClick={() => setFilter("yarn")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               filter === "yarn"
-                ? "bg-rose-main text-white"
-                : "bg-warm-50/90 text-warm-500 hover:bg-warm-200/60"
+                ? "bg-accent text-white"
+                : "text-warm-500 hover:bg-warm-100"
             }`}
           >
             실 {yarnCount}
           </button>
           <button
             onClick={() => setFilter("needle")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               filter === "needle"
-                ? "bg-amber-500 text-white"
-                : "bg-warm-50/90 text-warm-500 hover:bg-warm-200/60"
+                ? "bg-sky-main text-white"
+                : "text-warm-500 hover:bg-warm-100"
             }`}
           >
             바늘 {needleCount}
           </button>
           <button
             onClick={() => setFilter("supply")}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               filter === "supply"
-                ? "bg-sky-main text-white"
-                : "bg-warm-50/90 text-warm-500 hover:bg-warm-200/60"
+                ? "bg-warm-600 text-white"
+                : "text-warm-500 hover:bg-warm-100"
             }`}
           >
             부자재 {supplyCount}
           </button>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => openCreate("yarn")}
-            className="flex items-center gap-1 px-3 py-1.5 bg-rose-main text-white rounded-lg hover:bg-rose-main/80 transition-colors text-sm"
-          >
-            <Plus size={14} />실
-          </button>
-          <button
-            onClick={() => openCreate("needle")}
-            className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-sm"
-          >
-            <Plus size={14} />바늘
-          </button>
-          <button
-            onClick={() => openCreate("supply")}
-            className="flex items-center gap-1 px-3 py-1.5 bg-sky-main text-white rounded-lg hover:bg-sky-main/80 transition-colors text-sm"
-          >
-            <Plus size={14} />부자재
-          </button>
-        </div>
+        <button
+          onClick={() => openCreate("yarn")}
+          className="flex items-center gap-1.5 px-4 py-2 bg-warm-800 text-white rounded-xl hover:bg-warm-700 transition-colors text-sm font-medium"
+        >
+          <Plus size={14} />
+          재료 등록
+        </button>
       </div>
 
       {/* 재료 목록 */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12 text-warm-400 bg-warm-50/50 rounded-lg">
+        <div className="text-center py-16 text-warm-300 bg-warm-50 rounded-2xl border border-dashed border-warm-200">
           <p className="text-sm mb-1">등록된 재료가 없어요</p>
           <p className="text-xs">보유한 실이나 바늘, 부자재를 등록해보세요</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((material) => {
             const mt = material.type as MaterialType;
             const colors = typeColors[mt] || typeColors.supply;
             return (
               <div
                 key={material.id}
-                className={`rounded-lg shadow-sm border transition-shadow hover:shadow-md overflow-hidden ${colors.bg} ${colors.border}`}
+                className={`bg-white rounded-2xl shadow-sm border ${colors.border} border-l-4 ${colors.accent} overflow-hidden transition-all hover:shadow-md`}
               >
-                {/* 이미지 */}
                 {material.imageUrl && (
-                  <div className="w-full h-32 overflow-hidden">
+                  <div className="w-full h-36 overflow-hidden">
                     <img
                       src={material.imageUrl}
                       alt={material.name}
@@ -261,9 +247,9 @@ export default function MaterialStash() {
                 <div className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1.5">
                         <span
-                          className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-medium ${colors.badge}`}
+                          className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${colors.badge}`}
                         >
                           {typeLabel[mt] || mt}
                         </span>
@@ -273,18 +259,18 @@ export default function MaterialStash() {
                           </span>
                         )}
                       </div>
-                      <h3 className="font-bold text-warm-800 truncate">
+                      <h3 className="font-semibold text-warm-800 truncate">
                         {material.name}
                       </h3>
-                      <div className="flex flex-wrap gap-1.5 mt-1.5">
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1.5">
                         {material.color && (
-                          <span className="text-xs text-warm-500">
+                          <span className="text-xs text-warm-400">
                             {material.color}
                           </span>
                         )}
                         {material.weight && (
-                          <span className="text-xs text-warm-500">
-                            {mt === "needle" ? `${material.weight}` : material.weight}
+                          <span className="text-xs text-warm-400">
+                            {material.weight}
                           </span>
                         )}
                         {material.quantity && (
@@ -294,21 +280,21 @@ export default function MaterialStash() {
                         )}
                       </div>
                       {material.notes && (
-                        <p className="text-xs text-warm-400 mt-1 line-clamp-2">
+                        <p className="text-xs text-warm-300 mt-2 line-clamp-2 leading-relaxed">
                           {material.notes}
                         </p>
                       )}
                     </div>
-                    <div className="flex gap-1 ml-2 flex-shrink-0">
+                    <div className="flex gap-0.5 ml-2 flex-shrink-0">
                       <button
                         onClick={() => openEdit(material)}
-                        className="p-1.5 text-warm-400 hover:text-warm-600 transition-colors"
+                        className="p-2 text-warm-300 hover:text-warm-600 rounded-lg hover:bg-warm-50 transition-all"
                       >
                         <Pencil size={13} />
                       </button>
                       <button
                         onClick={() => handleDelete(material.id)}
-                        className="p-1.5 text-warm-400 hover:text-red-500 transition-colors"
+                        className="p-2 text-warm-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -324,26 +310,26 @@ export default function MaterialStash() {
       {/* 추가/수정 폼 모달 */}
       {showForm && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
           onClick={() => setShowForm(false)}
         >
           <div
             className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-warm-800">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-serif text-warm-800">
                 {editingId ? "재료 수정" : "재료 등록"}
               </h2>
               <button
                 onClick={() => setShowForm(false)}
-                className="text-warm-400 hover:text-warm-600"
+                className="text-warm-300 hover:text-warm-600 p-1 rounded-lg hover:bg-warm-50 transition-all"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {/* 타입 선택 */}
               <div className="flex gap-2">
                 {(["yarn", "supply", "needle"] as MaterialType[]).map((t) => (
@@ -351,10 +337,10 @@ export default function MaterialStash() {
                     key={t}
                     type="button"
                     onClick={() => setForm({ ...form, type: t })}
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       form.type === t
                         ? typeColors[t].active
-                        : "bg-warm-100 text-warm-500"
+                        : "bg-warm-50 text-warm-500 hover:bg-warm-100"
                     }`}
                   >
                     {typeLabel[t]}
@@ -372,24 +358,24 @@ export default function MaterialStash() {
                   className="hidden"
                 />
                 {form.imageUrl ? (
-                  <div className="relative rounded-lg overflow-hidden">
+                  <div className="relative rounded-xl overflow-hidden">
                     <img
                       src={form.imageUrl}
                       alt="미리보기"
-                      className="w-full h-40 object-cover rounded-lg"
+                      className="w-full h-40 object-cover"
                     />
                     <div className="absolute top-2 right-2 flex gap-1">
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="p-1.5 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                        className="p-1.5 bg-black/40 text-white rounded-full hover:bg-black/60 transition-colors"
                       >
                         <Camera size={14} />
                       </button>
                       <button
                         type="button"
                         onClick={() => setForm({ ...form, imageUrl: "" })}
-                        className="p-1.5 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                        className="p-1.5 bg-black/40 text-white rounded-full hover:bg-black/60 transition-colors"
                       >
                         <X size={14} />
                       </button>
@@ -400,7 +386,7 @@ export default function MaterialStash() {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={uploading}
-                    className="w-full py-6 border-2 border-dashed border-warm-200 rounded-lg text-warm-400 hover:border-warm-300 hover:text-warm-500 transition-colors flex flex-col items-center gap-1.5"
+                    className="w-full py-8 border-2 border-dashed border-warm-200 rounded-xl text-warm-300 hover:border-warm-300 hover:text-warm-400 transition-all flex flex-col items-center gap-2"
                   >
                     {uploading ? (
                       <span className="text-sm">업로드 중...</span>
@@ -418,17 +404,17 @@ export default function MaterialStash() {
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                className="w-full px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                 placeholder={form.type === "needle" ? "이름 (예: 대바늘) *" : "이름 *"}
                 autoFocus
               />
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <input
                   type="text"
                   value={form.brand}
                   onChange={(e) => setForm({ ...form, brand: e.target.value })}
-                  className="px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className="px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                   placeholder="브랜드"
                 />
                 <input
@@ -437,21 +423,20 @@ export default function MaterialStash() {
                   onChange={(e) =>
                     setForm({ ...form, quantity: e.target.value })
                   }
-                  className="px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                  className="px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                   placeholder={form.type === "needle" ? "수량 (예: 2개)" : "수량 (예: 3볼)"}
                 />
               </div>
 
-              {/* 실: 색상 + 굵기 */}
               {form.type === "yarn" && (
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <input
                     type="text"
                     value={form.color}
                     onChange={(e) =>
                       setForm({ ...form, color: e.target.value })
                     }
-                    className="px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                    className="px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                     placeholder="색상"
                   />
                   <input
@@ -460,22 +445,21 @@ export default function MaterialStash() {
                     onChange={(e) =>
                       setForm({ ...form, weight: e.target.value })
                     }
-                    className="px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                    className="px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                     placeholder="굵기 (예: DK)"
                   />
                 </div>
               )}
 
-              {/* 바늘: 종류 + 호수 */}
               {form.type === "needle" && (
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <input
                     type="text"
                     value={form.color}
                     onChange={(e) =>
                       setForm({ ...form, color: e.target.value })
                     }
-                    className="px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                    className="px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                     placeholder="종류 (대바늘/코바늘/...)"
                   />
                   <input
@@ -484,7 +468,7 @@ export default function MaterialStash() {
                     onChange={(e) =>
                       setForm({ ...form, weight: e.target.value })
                     }
-                    className="px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30"
+                    className="px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
                     placeholder="호수 (예: 6mm)"
                   />
                 </div>
@@ -493,22 +477,22 @@ export default function MaterialStash() {
               <textarea
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="w-full px-3 py-2 border border-warm-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-main/30 resize-none"
+                className="w-full px-4 py-2.5 border border-warm-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all resize-none"
                 rows={2}
                 placeholder="메모"
               />
             </div>
 
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-2 mt-6">
               <button
                 onClick={() => setShowForm(false)}
-                className="px-4 py-2 text-warm-500 hover:bg-warm-100 rounded-lg transition-colors"
+                className="px-5 py-2.5 text-warm-500 hover:bg-warm-50 rounded-xl transition-all"
               >
                 취소
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-warm-700 text-white rounded-lg hover:bg-warm-800 transition-colors"
+                className="px-5 py-2.5 bg-warm-800 text-white rounded-xl hover:bg-warm-700 transition-colors"
               >
                 {editingId ? "수정" : "등록"}
               </button>

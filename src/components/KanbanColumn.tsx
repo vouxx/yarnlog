@@ -20,9 +20,9 @@ interface KanbanColumnProps {
 }
 
 const columnAccent: Record<ProjectStatus, string> = {
-  todo: "bg-amber-100/80 text-amber-700",
-  "in-progress": "bg-blue-100/80 text-blue-700",
-  done: "bg-green-100/80 text-green-700",
+  todo: "text-accent",
+  "in-progress": "text-sky-main",
+  done: "text-sage-main",
 };
 
 export default function KanbanColumn({
@@ -38,32 +38,32 @@ export default function KanbanColumn({
 
   return (
     <div
-      className={`flex flex-col rounded-lg ${
+      className={`flex flex-col rounded-2xl ${
         compact
-          ? "bg-warm-100/60 min-h-[160px]"
-          : "bg-warm-50/90 backdrop-blur-sm shadow-md min-h-[300px]"
-      } relative overflow-hidden transition-shadow ${
-        isOver ? "ring-2 ring-warm-300 bg-warm-100/80" : ""
+          ? "bg-warm-50 min-h-[160px]"
+          : "bg-warm-50 border border-warm-100 min-h-[300px]"
+      } relative overflow-hidden transition-all ${
+        isOver ? "ring-2 ring-accent/30 bg-warm-100" : ""
       }`}
     >
-      <div className="flex items-center justify-between px-3 pt-3 pb-1.5">
-        <div className="flex items-center gap-1.5">
-          <h2
-            className={`masking-tape font-bold text-sm px-1.5 py-0.5 rounded-sm ${columnAccent[status]}`}
-          >
+      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+        <div className="flex items-center gap-2">
+          <h2 className={`font-serif text-base ${columnAccent[status]}`}>
             {title}
           </h2>
-          <span className="text-xs text-warm-400">{projects.length}</span>
+          <span className="text-xs text-warm-300 bg-warm-100 px-2 py-0.5 rounded-full">
+            {projects.length}
+          </span>
         </div>
         <button
           onClick={onAddClick}
-          className="w-6 h-6 flex items-center justify-center rounded-full text-warm-400 hover:bg-warm-200/60 hover:text-warm-600 transition-colors text-lg leading-none"
+          className="w-7 h-7 flex items-center justify-center rounded-lg text-warm-300 hover:bg-warm-200 hover:text-warm-600 transition-all text-lg leading-none"
         >
           +
         </button>
       </div>
 
-      <div ref={setNodeRef} className="flex-1 px-2 pb-2 space-y-3">
+      <div ref={setNodeRef} className="flex-1 px-3 pb-3 space-y-3">
         <SortableContext
           items={projects.map((p) => p.id)}
           strategy={verticalListSortingStrategy}
