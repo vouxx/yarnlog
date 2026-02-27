@@ -26,7 +26,7 @@ export default function FocusSection({
         onClick={() => setCollapsed(!collapsed)}
         className="flex items-center gap-2.5 mb-4 group"
       >
-        <h2 className={`font-serif text-lg tracking-tight ${accentColor}`}>
+        <h2 className={`text-lg font-semibold tracking-tight ${accentColor}`}>
           {title}
         </h2>
         <span className="text-xs text-warm-300 bg-warm-100 px-2 py-0.5 rounded-full">

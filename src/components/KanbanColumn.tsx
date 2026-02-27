@@ -48,7 +48,7 @@ export default function KanbanColumn({
     >
       <div className="flex items-center justify-between px-4 pt-4 pb-2">
         <div className="flex items-center gap-2">
-          <h2 className={`font-serif text-base ${columnAccent[status]}`}>
+          <h2 className={`font-semibold text-base ${columnAccent[status]}`}>
             {title}
           </h2>
           <span className="text-xs text-warm-300 bg-warm-100 px-2 py-0.5 rounded-full">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Dropdown from "./Dropdown";
 
 interface SidebarProps {
   onAddProject: () => void;
@@ -52,14 +53,15 @@ export default function Sidebar({
 
   return (
     <aside className="w-64 flex-shrink-0 space-y-4">
-      <button
-        onClick={onAddProject}
-        className="w-full py-2.5 bg-warm-800 text-white rounded-xl hover:bg-warm-700 transition-colors font-medium text-sm"
-      >
-        + 새 프로젝트
-      </button>
+      {/* 프로젝트 관리 영역 */}
+      <div className="bg-white rounded-2xl p-4 shadow-sm border border-warm-100 space-y-3">
+        <button
+          onClick={onAddProject}
+          className="w-full py-2.5 bg-warm-800 text-white rounded-xl hover:bg-warm-700 transition-colors font-medium text-sm"
+        >
+          + 새 프로젝트
+        </button>
 
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-warm-100">
         <input
           type="text"
           value={searchQuery}
@@ -67,25 +69,24 @@ export default function Sidebar({
           placeholder="검색..."
           className="w-full px-3 py-2 bg-warm-50 border border-warm-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
         />
-      </div>
 
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-warm-100">
-        <label className="text-[11px] font-medium text-warm-400 uppercase tracking-wider block mb-2">
-          정렬
-        </label>
-        <select
-          value={sortBy}
-          onChange={(e) => onSortChange(e.target.value)}
-          className="w-full px-3 py-2 bg-warm-50 border border-warm-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/20"
-        >
-          <option value="recent">최신순</option>
-          <option value="name">이름순</option>
-          <option value="progress">진행률순</option>
-          <option value="difficulty">난이도순</option>
-        </select>
+        <div className="flex items-center gap-2">
+          <label className="text-[11px] font-medium text-warm-400 uppercase tracking-wider flex-shrink-0">
+            정렬
+          </label>
+          <Dropdown
+            value={sortBy}
+            onChange={onSortChange}
+            options={[
+              { value: "recent", label: "최신순" },
+              { value: "name", label: "이름순" },
+              { value: "progress", label: "진행률순" },
+              { value: "difficulty", label: "난이도순" },
+            ]}
+            className="flex-1"
+          />
+        </div>
       </div>
-
-      <div className="border-t border-warm-100" />
 
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-warm-100">
         <h3 className="text-[11px] font-medium text-warm-400 uppercase tracking-wider mb-3">
@@ -148,7 +149,7 @@ export default function Sidebar({
           {calculatedStitches !== null && (
             <div className="text-center pt-2 pb-1 bg-accent-light rounded-lg">
               <span className="text-[11px] text-warm-400">필요한 코 수 </span>
-              <span className="text-xl font-serif text-accent">
+              <span className="text-xl font-bold text-accent">
                 {calculatedStitches}
               </span>
               <span className="text-[11px] text-warm-400"> 코</span>

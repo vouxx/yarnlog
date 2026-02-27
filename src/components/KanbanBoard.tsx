@@ -17,20 +17,16 @@ import { Project } from "@prisma/client";
 import { COLUMNS, ProjectFormData, ProjectStatus } from "@/types/project";
 import KanbanColumn from "./KanbanColumn";
 import ProjectCard from "./ProjectCard";
-import ProjectModal from "./ProjectModal";
 import ProjectDetail from "./ProjectDetail";
 import Sidebar from "./Sidebar";
 
 export default function KanbanBoard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
-  const [detailProject, setDetailProject] = useState<Project | null>(null);
-  const [modalProject, setModalProject] = useState<Project | null | undefined>(
+  // undefined = closed, null = create mode, Project = view/edit
+  const [detailProject, setDetailProject] = useState<Project | null | undefined>(
     undefined
   );
-  const [modalDefaultStatus, setModalDefaultStatus] =
-    useState<ProjectStatus>("todo");
-  const [modalDefaultFolder, setModalDefaultFolder] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -194,56 +190,52 @@ export default function KanbanBoard() {
     });
   };
 
-  // --- 모달 핸들러 ---
+  // --- 핸들러 ---
   const openDetail = (project: Project) => {
     setDetailProject(project);
   };
 
-  const openEditFromDetail = () => {
-    if (!detailProject) return;
-    setModalProject(detailProject);
+  const openCreateDetail = () => {
     setDetailProject(null);
   };
 
-  const deleteFromDetail = async () => {
-    if (!detailProject) return;
-    await fetch(`/api/projects/${detailProject.id}`, { method: "DELETE" });
-    setDetailProject(null);
-    fetchProjects();
-  };
-
-  const openCreateModal = (status: ProjectStatus = "todo") => {
-    setModalProject(null);
-    setModalDefaultStatus(status);
-    setModalDefaultFolder(activeFolder === null ? "" : activeFolder);
-  };
-
-  const closeModal = () => {
-    setModalProject(undefined);
-  };
-
-  const handleSave = async (data: ProjectFormData) => {
-    if (modalProject) {
-      await fetch(`/api/projects/${modalProject.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-    } else {
-      await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+  const handleProjectUpdate = (updated: Project) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === updated.id ? updated : p))
+    );
+    if (detailProject && detailProject.id === updated.id) {
+      setDetailProject(updated);
     }
-    closeModal();
+  };
+
+  const handleCreate = async (data: ProjectFormData): Promise<Project | null> => {
+    const res = await fetch("/api/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const created = await res.json();
+    fetchProjects();
+    return created;
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    await fetch(`/api/projects/${id}`, { method: "DELETE" });
+    setDetailProject(undefined);
     fetchProjects();
   };
 
-  const handleDelete = async () => {
-    if (!modalProject || !confirm("정말 삭제할까요?")) return;
-    await fetch(`/api/projects/${modalProject.id}`, { method: "DELETE" });
-    closeModal();
+  const handleStatusChange = async (projectId: string, newStatus: string) => {
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === projectId ? { ...p, status: newStatus } : p
+      )
+    );
+    await fetch(`/api/projects/${projectId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
     fetchProjects();
   };
 
@@ -319,7 +311,7 @@ export default function KanbanBoard() {
                 title={col.title}
                 projects={getColumnProjects(col.id)}
                 onCardClick={openDetail}
-                onAddClick={() => openCreateModal(col.id)}
+                onAddClick={() => openCreateDetail()}
               />
             ))}
           </div>
@@ -327,9 +319,9 @@ export default function KanbanBoard() {
           {/* 프로젝트가 아예 없을 때 */}
           {projects.length === 0 && (
             <div className="text-center py-24">
-              <p className="font-serif text-xl text-warm-300 mb-3">아직 프로젝트가 없어요</p>
+              <p className="font-semibold text-xl text-warm-300 mb-3">아직 프로젝트가 없어요</p>
               <button
-                onClick={() => openCreateModal("todo")}
+                onClick={() => openCreateDetail()}
                 className="text-sm text-accent hover:text-accent/80 underline underline-offset-4 transition-colors"
               >
                 첫 프로젝트 만들기
@@ -349,39 +341,23 @@ export default function KanbanBoard() {
 
       {/* 사이드바 */}
       <Sidebar
-        onAddProject={() => openCreateModal("todo")}
+        onAddProject={openCreateDetail}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         sortBy={sortBy}
         onSortChange={setSortBy}
       />
 
-      {/* 상세 보기 */}
-      {detailProject && (
+      {/* 상세 보기 / 생성 */}
+      {detailProject !== undefined && (
         <ProjectDetail
           project={detailProject}
-          onClose={() => setDetailProject(null)}
-          onEdit={openEditFromDetail}
-          onDelete={deleteFromDetail}
-          onUpdate={(updated) => {
-            setDetailProject(updated);
-            setProjects((prev) =>
-              prev.map((p) => (p.id === updated.id ? updated : p))
-            );
-          }}
-        />
-      )}
-
-      {/* 편집 모달 */}
-      {modalProject !== undefined && (
-        <ProjectModal
-          project={modalProject}
-          defaultStatus={modalDefaultStatus}
-          defaultFolder={modalDefaultFolder}
           folders={folders}
-          onClose={closeModal}
-          onSave={handleSave}
-          onDelete={modalProject ? handleDelete : undefined}
+          onClose={() => setDetailProject(undefined)}
+          onDelete={handleDeleteProject}
+          onUpdate={handleProjectUpdate}
+          onCreate={handleCreate}
+          onStatusChange={handleStatusChange}
         />
       )}
     </div>

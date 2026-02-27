@@ -9,7 +9,7 @@ export async function PATCH(
   const body = await request.json();
 
   const data: Record<string, unknown> = {};
-  const fields = ["type", "name", "brand", "color", "weight", "quantity", "notes", "imageUrl"];
+  const fields = ["type", "name", "brand", "color", "weight", "quantity", "notes", "imageUrl", "folder"];
 
   for (const field of fields) {
     if (body[field] !== undefined) {

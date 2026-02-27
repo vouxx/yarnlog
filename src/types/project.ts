@@ -44,6 +44,7 @@ export interface ProjectFormData {
   tags?: string[];
   folder?: string;
   status?: ProjectStatus;
+  counters?: StitchCounter[];
   startDate?: string;
   endDate?: string;
 }
